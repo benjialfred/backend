@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
@@ -316,3 +318,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Session persists after closing browse
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Cloudinary Configuration (Production)
+cloudinary_url = os.environ.get('CLOUDINARY_URL')
+if cloudinary_url:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

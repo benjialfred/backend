@@ -23,3 +23,5 @@ qrcode
 gunicorn
 whitenoise
 dj-database-url
+cloudinary==1.36.0
+django-cloudinary-storage==0.3.0
