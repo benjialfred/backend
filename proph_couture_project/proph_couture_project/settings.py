@@ -77,9 +77,17 @@ CORS_ALLOWED_ORIGINS = [
     "https://nonrepatriable-corie-initiatively.ngrok-free.dev",
 ]
 
+frontend_url = os.environ.get("FRONTEND_URL")
+if frontend_url:
+    CORS_ALLOWED_ORIGINS.append(frontend_url)
+
 CSRF_TRUSTED_ORIGINS = [
     "https://nonrepatriable-corie-initiatively.ngrok-free.dev",
 ]
+
+if frontend_url:
+    CSRF_TRUSTED_ORIGINS.append(frontend_url)
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
