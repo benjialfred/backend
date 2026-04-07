@@ -80,6 +80,7 @@ const Orders = () => {
 
   const handleSaveMeasurements = async (orderId: number, itemId: number) => {
     try {
+        console.log("Saving measurements for order", orderId, "item", itemId);
         // Mock save to backend, real implementation depends on order items endpoint
         // await orderAPI.updateItemMeasurements(itemId, measurementsForm);
         alert("Mesures enregistrées avec succès et notification envoyée à l'atelier de confection.");

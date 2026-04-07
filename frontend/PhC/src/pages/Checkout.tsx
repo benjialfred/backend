@@ -23,7 +23,7 @@ export default function Checkout() {
     const [isLoading, setIsLoading] = useState(false);
     
     // Form States
-    const [info, setInfo] = useState({ phone: user?.phone || '', address: '', city: 'Douala' });
+    const [info, setInfo] = useState({ phone: (user as any)?.phone || '', address: '', city: 'Douala' });
     const [deliveryMethod, setDeliveryMethod] = useState('home_standard'); // home_standard, home_far, pickup
     const [paymentMethod, setPaymentMethod] = useState('orange_money'); // orange_money, mtn_money, card, cash
     

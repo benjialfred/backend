@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Ruler, Sparkles, MoveHorizontal, Maximize } from 'lucide-react';
 import type { CoutureProfile } from './types';
 

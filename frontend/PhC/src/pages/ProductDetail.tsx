@@ -6,7 +6,6 @@ import {
     ChevronLeft,
     ChevronRight,
     Heart,
-    ShoppingBag,
     Ruler,
     Truck,
     Shield,
