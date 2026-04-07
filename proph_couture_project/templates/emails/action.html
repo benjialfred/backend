@@ -1,0 +1,28 @@
+{% extends "emails/base.html" %}
+
+{% block subject %}{{ subject }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<p>{{ greeting }},</p>
+
+<p>{{ message|linebreaksbr }}</p>
+
+{% if button_url and button_text %}
+<div class="btn-wrapper">
+    <a href="{{ button_url }}" class="btn">{{ button_text }}</a>
+</div>
+{% endif %}
+
+{% if extra_info %}
+<div class="divider"></div>
+<p class="gold-text"><em>Informations complémentaires :</em></p>
+<p>{{ extra_info|linebreaksbr }}</p>
+{% endif %}
+
+<p style="margin-top: 30px;">
+    Cordiales salutations,<br>
+    <strong>L'équipe ProphCouture</strong>
+</p>
+{% endblock %}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeProduct | Élégance Redéfinie</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C4AB6',
+                        secondary: '#8D72E1',
+                        accent: '#B9E0FF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <custom-navbar></custom-navbar>
+    
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Product Hero Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
+            <div class="relative">
+                <div class="bg-white p-6 rounded-2xl shadow-xl">
+                    <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-xl bg-gray-100">
+                        <img src="sukuna-x-gojo-5120x2880-21530.png" alt="Produit de luxe" class="h-full w-full object-cover object-center">
+                    </div>
+                    <div class="grid grid-cols-4 gap-4 mt-4">
+                        <div class="bg-gray-100 rounded-lg overflow-hidden">
+                            <img src="gon-freecss-neon-5120x2880-21477.png" alt="Vue 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="bg-gray-100 rounded-lg overflow-hidden">
+                            <img src="tigre-feroce-en-studio.jpg" alt="Vue 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="bg-gray-100 rounded-lg overflow-hidden">
+                            <img src="vue-de-la-configuration-du-bureau-de-jeu-eclaire-au-neon-avec-clavier.jpg" alt="Vue 3" class="w-full h-full object-cover">
+                        </div>
+                        <div class="bg-gray-100 rounded-lg overflow-hidden">
+                            <img src="beau-horizon-de-shanghai-la-nuit-fond-urbain-moderne.jpg" alt="Vue 4" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary rounded-full opacity-20"></div>
+                <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary rounded-full opacity-20"></div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="flex items-center space-x-2">
+                    <span class="px-3 py-1 bg-accent text-primary rounded-full text-sm font-medium">Nouveauté</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">Collection Printemps</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Montre Élégance Royale</h1>
+                <p class="text-xl text-gray-600">Édition Limitée - Pièce Unique</p>
+                
+                <div class="flex items-center space-x-2">
+                    <div class="flex">
+                        <i data-feather="star" class="text-yellow-400 fill-yellow-400 w-5 h-5"></i>
+                        <i data-feather="star" class="text-yellow-400 fill-yellow-400 w-5 h-5"></i>
+                        <i data-feather="star" class="text-yellow-400 fill-yellow-400 w-5 h-5"></i>
+                        <i data-feather="star" class="text-yellow-400 fill-yellow-400 w-5 h-5"></i>
+                        <i data-feather="star" class="text-yellow-400 w-5 h-5"></i>
+                    </div>
+                    <span class="text-gray-500">(42 avis)</span>
+                </div>
+
+                <p class="text-gray-700 leading-relaxed">
+                    La Montre Élégance Royale incarne le summum de l'art horloger. Chaque détail a été méticuleusement conçu par nos maîtres horlogers pour offrir une pièce qui transcende le temps.
+                </p>
+
+                <div class="pt-4 border-t border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Caractéristiques</h3>
+                    <ul class="mt-2 space-y-2">
+                        <li class="flex items-center">
+                            <i data-feather="check" class="text-green-500 w-5 h-5 mr-2"></i>
+                            <span class="text-gray-600">Mouvement automatique suisse</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-feather="check" class="text-green-500 w-5 h-5 mr-2"></i>
+                            <span class="text-gray-600">Cadran en saphir antireflet</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-feather="check" class="text-green-500 w-5 h-5 mr-2"></i>
+                            <span class="text-gray-600">Bracelet en cuir d'alligator</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-feather="check" class="text-green-500 w-5 h-5 mr-2"></i>
+                            <span class="text-gray-600">Étanche jusqu'à 50m</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="pt-4 border-t border-gray-200">
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold text-gray-900">€2,499</span>
+                        <span class="ml-2 text-lg text-gray-500 line-through">€2,999</span>
+                        <span class="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded text-sm font-medium">-17%</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Livraison gratuite et emballage cadeau inclus</p>
+                </div>
+
+                <div class="flex space-x-4 pt-6">
+                    <div class="flex items-center border border-gray-300 rounded-lg">
+                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100">
+                            <i data-feather="minus" class="w-4 h-4"></i>
+                        </button>
+                        <span class="px-4 py-2">1</span>
+                        <button name="btn" class="px-4 py-2 text-gray-600 hover:bg-gray-100">
+                            <i data-feather="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <button class="flex-1 bg-primary hover:bg-primary-600 text-white py-3 px-6 rounded-lg font-medium transition duration-300 flex items-center justify-center">
+                        <i data-feather="shopping-cart" class="w-5 h-5 mr-2"></i>
+                        Ajouter au panier
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Details Tabs -->
+        <section class="mb-24">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <button class="border-b-2 border-primary text-primary font-medium py-4 px-1">Description</button>
+                    <button class="border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium py-4 px-1">Spécifications</button>
+                    <button class="border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium py-4 px-1">Avis (42)</button>
+                    <button class="border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium py-4 px-1">FAQ</button>
+                </nav>
+            </div>
+
+            <div class="py-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Détails du produit</h3>
+                <div class="prose max-w-none text-gray-600">
+                    <p>
+                        La Montre Élégance Royale est bien plus qu'un simple garde-temps. C'est une déclaration de style, un symbole de réussite et un héritage à transmettre. Chaque composant a été sélectionné avec le plus grand soin pour garantir excellence et durabilité.
+                    </p>
+                    <p class="mt-4">
+                        Le mouvement automatique suisse, reconnu pour sa précision légendaire, est visible à travers le fond de boîtier en verre saphir. Le cadran, protégé par un cristal de saphir antireflet, révèle des index en or rose et des aiguilles facettées qui captent la lumière avec élégance.
+                    </p>
+                    <p class="mt-4">
+                        Le bracelet en cuir d'alligator véritable, teinté à la main, offre un confort inégalé tout en s'assouplissant avec le temps pour épouser parfaitement votre poignet. La boucle déployante en acier inoxydable assure une fermeture sécurisée tout en préservant l'esthétique raffinée de la montre.
+                    </p>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h4 class="text-lg font-medium text-gray-900 mb-3 flex items-center">
+                            <i data-feather="truck" class="w-5 h-5 mr-2 text-primary"></i>
+                            Livraison & Retours
+                        </h4>
+                        <p class="text-gray-600">
+                            Livraison express gratuite sous 2-3 jours ouvrables. Retours acceptés sous 30 jours. Nous offrons un emballage cadeau premium pour chaque commande.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h4 class="text-lg font-medium text-gray-900 mb-3 flex items-center">
+                            <i data-feather="shield" class="w-5 h-5 mr-2 text-primary"></i
+</body>
+</html>

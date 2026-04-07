@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block subject %}ProphCouture{% endblock %}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FAF9F6;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            color: #221f10;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(242, 204, 13, 0.08);
+            border: 1px solid rgba(242, 204, 13, 0.15);
+        }
+
+        .header {
+            background-color: #221f10;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            color: #f2cc0d;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-decoration: none;
+            margin: 0;
+        }
+
+        .content {
+            padding: 40px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #221f10;
+            font-family: 'Georgia', serif;
+            font-size: 24px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            font-size: 15px;
+            color: #4a4a4a;
+        }
+
+        .btn-wrapper {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background-color: #f2cc0d;
+            color: #221f10 !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .footer {
+            background-color: #fcfbf5;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid rgba(242, 204, 13, 0.1);
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #888888;
+            margin: 0 0 8px 0;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: rgba(242, 204, 13, 0.2);
+            margin: 30px 0;
+        }
+
+        .gold-text {
+            color: #ecb613;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <!-- Pour ajouter le logo visuel dans l'email, remplacez la balise <h1> ci-dessous par la balise <img> décommentée et mettez le lien direct vers l'image de votre logo :
+            <img src="https://votre-serveur.com/static/images/votre-logo.png" alt="Prophéti Couture" style="max-height: 70px; width: auto;" />
+            -->
+            <h1 class="logo">Prophéti Couture</h1>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Prophéti Couture</strong></p>
+            <p>L'excellence sur-mesure au service de votre élégance.</p>
+            <p style="margin-top: 16px;">© {% now "Y" %} Prophéti Couture. Tous droits réservés.</p>
+        </div>
+    </div>
+</body>
+
+</html>
