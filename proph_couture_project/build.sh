@@ -6,3 +6,6 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --noinput
 python manage.py migrate
+
+# Création automatique du super admin de production
+python create_render_admin.py
