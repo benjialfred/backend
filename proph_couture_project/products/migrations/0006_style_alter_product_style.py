@@ -25,7 +25,11 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Styles',
             },
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='product',
+            name='style',
+        ),
+        migrations.AddField(
             model_name='product',
             name='style',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='products', to='products.style'),
