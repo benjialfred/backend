@@ -20,6 +20,22 @@ class Category(models.Model):
         verbose_name_plural = "Catégories"
 
 # ==========================================
+# 1.5. GESTION DES STYLES DYNAMIQUES
+# ==========================================
+class Style(models.Model):
+    nom = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.nom
+
+    class Meta:
+        verbose_name_plural = "Styles"
+
+# ==========================================
 # 2. PRODUIT PRINCIPAL DU CATALOGUE
 # ==========================================
 class Product(models.Model):
@@ -32,14 +48,6 @@ class Product(models.Model):
         ('XXL', 'XXL'),
         ('UNIQUE', 'Unique'),
     ]
-    
-    STYLE_CHOICES = [
-        ('CLASSIC', 'Classic'),
-        ('MODERN', 'Modern'),
-        ('SPORT', 'Sport'),
-        ('CASUAL', 'Casual'),
-        ('FORMAL', 'Formal'),
-    ]
 
     nom = models.CharField(max_length=255)
     description = models.TextField()
@@ -51,7 +59,7 @@ class Product(models.Model):
     taille = models.CharField(max_length=50, choices=TAILLE_CHOICES, blank=True, null=True)
     couleur = models.CharField(max_length=100, blank=True, null=True)
     materiau = models.CharField(max_length=100, blank=True, null=True)
-    style = models.CharField(max_length=100, choices=STYLE_CHOICES, default='CLASSIC')
+    style = models.ForeignKey(Style, on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
     image_principale = models.ImageField(upload_to='products/images/')
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

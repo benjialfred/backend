@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 from django.db.models import Avg
-from .models import Product, ProductImage, Category, Model, Favorite, ProductComment
+from .models import Product, ProductImage, Category, Style, Model, Favorite, ProductComment
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -9,6 +9,11 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'nom', 'description', 'is_active']
 
+
+class StyleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Style
+        fields = ['id', 'nom', 'description', 'is_active']
 
 class ProductImageSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
@@ -67,6 +72,16 @@ class ProductSerializer(serializers.ModelSerializer):
         write_only=True
     )
     category = CategorySerializer(read_only=True)
+
+    style_id = serializers.PrimaryKeyRelatedField(
+        queryset=Style.objects.all(),
+        source='style',
+        write_only=True,
+        required=False,
+        allow_null=True
+    )
+    style = StyleSerializer(read_only=True)
+
     galerie_images_list = ProductImageSerializer(
         source='galerie_images', 
         many=True, 
@@ -88,7 +103,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'nom', 'description', 'description_detaillee',
             'prix', 'prix_promotion', 'stock', 'category_id', 'category',
-            'taille', 'couleur', 'materiau', 'style',
+            'taille', 'couleur', 'materiau', 'style_id', 'style',
             'image_principale', 'is_featured', 'is_active',
             'sku', 'created_at', 'updated_at',
             'galerie_images', 'galerie_images_list',

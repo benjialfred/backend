@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-&947mzy1nsvbxfco#r*klis)g+cu!w^8as*xb&hgm(07dyfelg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '*', 'nonrepatriable-corie-initiatively.ngrok-free.dev']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '*', 'nonrepatriable-corie-initiatively.ngrok-free.dev',  'prophetiecouture.vercel.app']
 '.alwaysdata.net'
 
 # Application definition
@@ -77,6 +77,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
     "https://nonrepatriable-corie-initiatively.ngrok-free.dev",
+    "https://prophetiecouture.vercel.app",
 ]
 
 frontend_url = os.environ.get("FRONTEND_URL")
@@ -85,6 +86,7 @@ if frontend_url:
 
 CSRF_TRUSTED_ORIGINS = [
     "https://nonrepatriable-corie-initiatively.ngrok-free.dev",
+    "https://prophetiecouture.vercel.app",
 ]
 
 if frontend_url:
@@ -111,9 +113,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-# ==========================================
 # CONFIGURATION DJANGO REST FRAMEWORK (DRF)
-# ==========================================
 # J'ai défini JWTAuthentication comme méthode principale pour assurer l'architecture "Stateless"
 # (sans session stockée sur le serveur), ce qui est idéal pour les SPA comme React.
 REST_FRAMEWORK = {

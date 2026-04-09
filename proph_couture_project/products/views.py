@@ -2,9 +2,9 @@ from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Q
-from .models import Product, Category, Model, Favorite, ProductComment
+from .models import Product, Category, Style, Model, Favorite, ProductComment
 from .serializers import (
-    ProductSerializer, CategorySerializer, ModelSerializer,
+    ProductSerializer, CategorySerializer, StyleSerializer, ModelSerializer,
     ProductCommentSerializer, ProductCommentCreateSerializer,
     FavoriteSerializer
 )
@@ -166,6 +166,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class StyleViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet pour gérer les styles
+    """
+    queryset = Style.objects.all()
+    serializer_class = StyleSerializer
     permission_classes = [IsAdminOrReadOnly]
 
 

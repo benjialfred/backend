@@ -6,6 +6,7 @@ from . import views
 router = DefaultRouter()
 # IMPORTANT: L'ordre est crucial - 'categories' doit être avant ''
 router.register(r'categories', views.CategoryViewSet, basename='category')
+router.register(r'styles', views.StyleViewSet, basename='style')
 router.register(r'models', views.ModelViewSet, basename='model')
 router.register(r'', views.ProductViewSet, basename='product')
 
