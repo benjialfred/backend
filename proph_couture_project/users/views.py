@@ -165,6 +165,7 @@ class UserStatsView(APIView):
 
     def get(self, request):
         user_count = User.objects.count()
+        client_count = User.objects.filter(role='CLIENT').count()
         product_count = Product.objects.count()
         
         if Order:
@@ -229,6 +230,16 @@ class UserStatsView(APIView):
             'active_apprentices': active_apprentices,
             'recent_activity': recent_activity
         }
+        
+        # Calculate popular products
+        from django.db.models import Count
+        popular_products_qs = Product.objects.annotate(favorites_count=Count('favorited_by')).filter(favorites_count__gt=0).order_by('-favorites_count')[:5]
+        popular_products = [
+            {'id': p.id, 'nom': p.nom, 'favorites_count': p.favorites_count} for p in popular_products_qs
+        ]
+
+        stats['total_clients'] = client_count
+        stats['popular_products'] = popular_products
         
         # Add withdrawal stats if model exists
         try:

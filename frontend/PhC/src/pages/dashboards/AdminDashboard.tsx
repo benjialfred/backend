@@ -124,9 +124,9 @@ const AdminDashboard = () => {
     // Derived stats for UI
     const statCards = [
         { label: 'Utilisateurs', value: stats.total_users, color: 'text-gray-900', bg: 'bg-[#FDFDFA]' },
+        { label: 'Clients', value: stats.total_clients || 0, color: 'text-gray-900', bg: 'bg-[#FDFDFA]' },
         { label: 'Commandes', value: stats.total_orders, color: 'text-gray-900', bg: 'bg-[#FDFDFA]' },
-        { label: 'Revenus', value: `${stats.total_revenue.toLocaleString()} FCFA`, color: 'text-gray-900', bg: 'bg-[#FDFDFA]' },
-        { label: 'Apprentis', value: stats.active_apprentices, color: 'text-gray-900', bg: 'bg-[#FDFDFA]' },
+        { label: 'Top Produit', value: stats.popular_products?.[0]?.nom || '-', color: 'text-[#8CE158]', bg: 'bg-[#FDFDFA]' },
     ];
 
     const getGreeting = () => {
