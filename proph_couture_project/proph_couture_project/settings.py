@@ -71,6 +71,8 @@ MIDDLEWARE = [
 # Permet au frontend React (sur les ports 5173/3000) de communiquer avec l'API Django.
 # J'ai autorisé les credentials pour permettre la transmission sécurisée des cookies
 # ou des Authorization headers (Tokens JWT).
+CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins (frontend uses withCredentials: false)
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
@@ -92,7 +94,7 @@ CSRF_TRUSTED_ORIGINS = [
 if frontend_url:
     CSRF_TRUSTED_ORIGINS.append(frontend_url)
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False  # Frontend uses withCredentials: false
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
