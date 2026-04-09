@@ -41,9 +41,14 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [loading] = useState(false);
 
     const lastUnreadCountRef = React.useRef(0);
+    const failCountRef = React.useRef(0);
+    const MAX_FAILURES = 3;
 
     const fetchNotifications = async () => {
         if (!user) return;
+
+        // Stop polling after too many consecutive failures
+        if (failCountRef.current >= MAX_FAILURES) return;
 
         try {
             // Fetch personal notifications
@@ -51,20 +56,16 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const notifs = Array.isArray(notifsData) ? notifsData : (notifsData.results || []);
             setNotifications(notifs);
 
+            // Reset failure counter on success
+            failCountRef.current = 0;
+
             const unreadCount = notifs.filter((n: Notification) => !n.read).length;
 
-            // Notify only if we have NEW unread messages (count increased)
-            // or if it's the first load (lastRef is 0) and we have unread messages.
-            // But to avoid spam on reload, maybe we only want to notify if count INCREASES from a non-zero value?
-            // User request: "retire tous les doublons".
-            // Let's being conservative: Notify only if unreadCount > lastUnreadCountRef.current
-            // This means on first load (0->N), it notifies. On poll (N->N), it doesn't.
-            // On new message (N->N+1), it notifies.
             if (unreadCount > 0 && unreadCount > lastUnreadCountRef.current) {
                 toast('Vous avez de nouveaux messages. Allez les surveiller !', {
                     icon: '📬',
                     duration: 5000,
-                    id: 'new-messages-toast', // dedupe ID
+                    id: 'new-messages-toast',
                 });
             }
             lastUnreadCountRef.current = unreadCount;
@@ -73,7 +74,6 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const ann = await announcementAPI.getAll();
             const annList = Array.isArray(ann) ? ann : ann.results || [];
 
-            // Client-side filtering if backend doesn't filter perfectly (it should though)
             const visibleAnnouncements = annList.filter((a: Announcement) => {
                 if (a.is_public) return true;
                 if (!user) return false;
@@ -85,20 +85,26 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             setAnnouncements(visibleAnnouncements);
 
         } catch (error) {
-            console.error('Failed to fetch notifications', error);
+            failCountRef.current += 1;
+            if (failCountRef.current < MAX_FAILURES) {
+                console.warn(`Notifications: tentative ${failCountRef.current}/${MAX_FAILURES} échouée`);
+            } else {
+                console.warn('Notifications: arrêt du polling après 3 échecs consécutifs. Rechargez la page pour réessayer.');
+            }
         }
     };
 
     useEffect(() => {
         if (user) {
+            failCountRef.current = 0; // Reset on user change
             fetchNotifications();
-            // Poll every 30 seconds
             const interval = setInterval(fetchNotifications, 30000);
             return () => clearInterval(interval);
         } else {
             setNotifications([]);
             setAnnouncements([]);
-            lastUnreadCountRef.current = 0; // Reset count on logout
+            lastUnreadCountRef.current = 0;
+            failCountRef.current = 0;
         }
     }, [user]);
 

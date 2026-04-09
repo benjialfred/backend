@@ -12,10 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&947mzy1nsvbxfco#r*klis)g+cu!w^8as*xb&hgm(07dyfelg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '*', 'nonrepatriable-corie-initiatively.ngrok-free.dev',  'prophetiecouture.vercel.app']
-'.alwaysdata.net'
+ALLOWED_HOSTS = ['.onrender.com', 'backend-1-7oti.onrender.com', 'prophetiecouture.vercel.app']
 
 # Application definition
 
@@ -74,11 +73,6 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins (frontend uses withCredentials: false)
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-    "https://nonrepatriable-corie-initiatively.ngrok-free.dev",
     "https://prophetiecouture.vercel.app",
 ]
 
@@ -87,7 +81,6 @@ if frontend_url:
     CORS_ALLOWED_ORIGINS.append(frontend_url)
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://nonrepatriable-corie-initiatively.ngrok-free.dev",
     "https://prophetiecouture.vercel.app",
 ]
 

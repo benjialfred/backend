@@ -129,7 +129,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-black font-sans selection:bg-primary-500 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-black text-black dark:text-white font-sans selection:bg-primary-500 selection:text-white">
       <Navigation />
 
       {/* Hero Section */}
@@ -213,11 +213,11 @@ const Home = () => {
       </motion.section>
 
       {/* Features - High End Editorial Style */}
-      <motion.section className="bg-white py-32 border-b border-gray-100">
+      <motion.section className="bg-white dark:bg-[#0a0a0a] py-32 border-b border-gray-100 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 md:px-10">
           <div className="text-center mb-24">
             <span className="text-primary-500 font-bold text-xs uppercase tracking-[0.3em] mb-4 inline-block">Notre Savoir-Faire</span>
-            <h2 className="text-4xl md:text-5xl font-serif font-black mb-6 text-gray-900">L'Excellence à chaque étape</h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-black mb-6 text-gray-900 dark:text-white">L'Excellence à chaque étape</h2>
             <div className="w-24 h-[1px] bg-primary-500 mx-auto"></div>
           </div>
           
@@ -237,7 +237,7 @@ const Home = () => {
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-2xl font-serif font-bold mb-4 text-gray-900">
+                <h3 className="text-2xl font-serif font-bold mb-4 text-gray-900 dark:text-white">
                   {feature.title}
                 </h3>
                 <p className="text-sm text-gray-500 leading-relaxed font-light">
@@ -293,7 +293,7 @@ const Home = () => {
       </motion.section>
 
       {/* Featured Models */}
-      <motion.section className="bg-white py-32 border-y border-gray-100">
+      <motion.section className="bg-white dark:bg-[#0a0a0a] py-32 border-y border-gray-100 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 md:px-10">
           <div className="text-center mb-24">
             <span className="text-primary-500 font-bold text-xs uppercase tracking-[0.3em] mb-4 inline-block">Sur-Mesure</span>

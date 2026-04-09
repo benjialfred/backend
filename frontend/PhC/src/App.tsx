@@ -89,7 +89,7 @@ function App() {
         <FavoritesProvider>
           <NotificationProvider>
             <GlobalLoaderWrapper>
-              <div className="min-h-screen bg-white font-sans text-black dark:text-white transition-colors duration-300">
+              <div className="min-h-screen bg-white dark:bg-black font-sans text-black dark:text-white transition-colors duration-300">
                 <Toaster position="top-center" />
                 <NotificationBanner />
 

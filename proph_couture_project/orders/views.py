@@ -482,7 +482,7 @@ class InitiatePaymentView(APIView):
             }
             
             # URL de retour (Rediriger vers le Frontend, pas le Backend)
-            frontend_url = request.headers.get('Origin', 'http://localhost:5173')
+            frontend_url = request.headers.get('Origin', 'https://prophetiecouture.vercel.app')
             return_url = f'{frontend_url}/payment/success/?order={order.order_number}'
             
             # Créer le paiement

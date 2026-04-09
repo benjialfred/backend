@@ -33,6 +33,16 @@ urlpatterns = [
     # Panel d'administration Django natif (sécurisé)
     path('admin/', admin.site.urls),
     
+    # TEMPORAIRE: Endpoint pour créer l'admin de production (à supprimer après)
+    path('api/setup-admin/', lambda request: __import__('django.http', fromlist=['JsonResponse']).JsonResponse(
+        (lambda: (
+            __import__('users.models', fromlist=['User']).User.objects.get_or_create(
+                email='benjaminadzessa@gmail.com',
+                defaults={'is_staff': True, 'is_superuser': True, 'is_active': True}
+            ),
+        ))() and {'status': 'done'} or {'status': 'done'}
+    )),
+    
     # ----------------------------------------
     # Authentification & Accès (JWT)
     # ----------------------------------------

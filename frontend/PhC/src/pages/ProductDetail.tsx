@@ -12,7 +12,9 @@ import {
     Clock,
     Star,
     Share2,
-    Sparkles
+    Sparkles,
+    ShoppingBag,
+    MessageCircle
 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/layout/Footer';
@@ -138,6 +140,22 @@ const ProductDetail = () => {
             console.error("Erreur lors du partage:", err);
         }
     };
+
+    const handleShareWhatsApp = () => {
+        if (!product) return;
+        const text = `Découvrez cette création exceptionnelle : ${product.nom} - ${(product.prix_promotion || product.prix).toLocaleString()} FCFA`;
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}%20${url}`, '_blank');
+    };
+
+    const handleShareFacebook = () => {
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+    };
+
+    const unitPrice = product ? (product.prix_promotion || product.prix) : 0;
+    const totalPrice = unitPrice * quantity;
+    const maxQuantity = product?.stock || 1;
 
     const nextImage = () => setActiveImageIndex((prev) => (prev + 1) % images.length);
     const prevImage = () => setActiveImageIndex((prev) => (prev - 1 + images.length) % images.length);
@@ -326,30 +344,65 @@ const ProductDetail = () => {
                                 <div className="inline-flex items-center bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 p-1">
                                     <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-12 h-12 flex items-center justify-center text-xl font-medium text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-white/10 transition-all">-</button>
                                     <div className="w-16 text-center font-bold text-lg text-gray-900 dark:text-white">{quantity}</div>
-                                    <button onClick={() => setQuantity(quantity + 1)} className="w-12 h-12 flex items-center justify-center text-xl font-medium text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-white/10 transition-all">+</button>
+                                    <button onClick={() => setQuantity(Math.min(maxQuantity, quantity + 1))} disabled={quantity >= maxQuantity} className="w-12 h-12 flex items-center justify-center text-xl font-medium text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed">+</button>
                                 </div>
+                                {quantity >= maxQuantity && (
+                                    <p className="text-xs text-amber-500 dark:text-amber-400 font-medium mt-2">Stock maximum atteint ({maxQuantity} pièces)</p>
+                                )}
                             </div>
                         </div>
 
                         {/* Actions */}
-                        <div className="flex gap-4 mb-10">
+                        <div className="space-y-4 mb-10">
+                            {/* Bouton Ajouter au Panier avec prix dynamique */}
                             <button
-                                onClick={() => setShowCoutureFlow(true)}
-                                className="flex-1 py-4 flex items-center justify-center bg-black dark:bg-white text-white dark:text-black font-bold uppercase tracking-widest hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
-                                style={{ pointerEvents: product.stock ? 'auto' : 'none', opacity: product.stock ? 1 : 0.5 }}
+                                onClick={() => handleAddToCart()}
+                                disabled={!product.stock}
+                                className="w-full py-4 flex items-center justify-center gap-3 bg-primary-500 text-black font-bold uppercase tracking-widest hover:bg-primary-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Sparkles className="w-5 h-5 mr-3" />
-                                Personnaliser ce Modèle
+                                <ShoppingBag className="w-5 h-5" />
+                                <span>Ajouter au panier — {totalPrice.toLocaleString()} FCFA</span>
                             </button>
-                            <button
-                                onClick={() => toggleFavorite(product)}
-                                className={`w-[60px] h-[60px] flex items-center flex-shrink-0 justify-center border transition-all duration-300 ${isFavorite ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-500/10' : 'border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:border-black dark:hover:border-white'}`}
-                            >
-                                <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
-                            </button>
-                            <button onClick={handleShare} className="w-[60px] h-[60px] flex flex-shrink-0 items-center justify-center border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:border-black dark:hover:border-white hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-                                <Share2 className="w-6 h-6" />
-                            </button>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowCoutureFlow(true)}
+                                    className="flex-1 py-4 flex items-center justify-center bg-black dark:bg-white text-white dark:text-black font-bold uppercase tracking-widest hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm"
+                                    style={{ pointerEvents: product.stock ? 'auto' : 'none', opacity: product.stock ? 1 : 0.5 }}
+                                >
+                                    <Sparkles className="w-5 h-5 mr-3" />
+                                    Personnaliser
+                                </button>
+                                <button
+                                    onClick={() => toggleFavorite(product)}
+                                    className={`w-[52px] h-[52px] flex items-center flex-shrink-0 justify-center border transition-all duration-300 ${isFavorite ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-500/10' : 'border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:border-black dark:hover:border-white'}`}
+                                >
+                                    <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+                                </button>
+                                <button onClick={handleShare} className="w-[52px] h-[52px] flex flex-shrink-0 items-center justify-center border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:border-black dark:hover:border-white hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
+                                    <Share2 className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            {/* Partage social - WhatsApp + Facebook */}
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={handleShareWhatsApp}
+                                    className="flex-1 py-3 flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold text-sm uppercase tracking-wider rounded-lg hover:bg-[#20bd5a] transition-all"
+                                >
+                                    <MessageCircle className="w-5 h-5" />
+                                    WhatsApp
+                                </button>
+                                <button
+                                    onClick={handleShareFacebook}
+                                    className="flex-1 py-3 flex items-center justify-center gap-2 bg-[#1877F2] text-white font-bold text-sm uppercase tracking-wider rounded-lg hover:bg-[#166FE5] transition-all"
+                                >
+                                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                    Facebook
+                                </button>
+                            </div>
                         </div>
 
                         {/* Accordion / Tabs description */}

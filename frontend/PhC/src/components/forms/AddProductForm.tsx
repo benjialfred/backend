@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Image as ImageIcon, Loader2, DollarSign, Sparkles, Box } from 'lucide-react';
+import { X, Plus, Image as ImageIcon, Loader2, Sparkles, Box, Tag, Type, FileText, Layers, Star, Power, ChevronDown, Upload } from 'lucide-react';
 import type { Product, Category } from '@/types';
 import { productAPI } from '@/services/api';
 import { toast } from 'react-hot-toast';
@@ -46,14 +46,13 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
         prix: product.prix,
         prix_promotion: product.prix_promotion?.toString() || '',
         stock: product.stock,
-        category_id: product.category?.toString() || product.category_id?.toString() || '', // Handle both object or ID
+        category_id: product.category?.toString() || product.category_id?.toString() || '',
         image_principale: product.image_principale || '',
         style: product.style || 'CLASSIC',
         is_featured: product.is_featured,
         is_active: product.is_active,
       });
       if (product.galerie_images && Array.isArray(product.galerie_images)) {
-        // Assuming backend returns list of strings (urls or base64)
         setImages(product.galerie_images.map((img: any) => typeof img === 'string' ? img : img.image));
       }
     }
@@ -63,18 +62,12 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
     setCategoriesLoading(true);
     try {
       const data = await productAPI.getCategories();
-      console.log('Categories API response:', data);
-
       if (Array.isArray(data)) {
         setCategories(data);
       } else if (data && typeof data === 'object' && Array.isArray((data as any).results)) {
-        // Handle paginated response if backend adds pagination
         setCategories((data as any).results);
       } else {
-        console.error('Invalid categories format (expected array):', data);
         setCategories([]);
-        // Optional: show error but don't block the UI too much
-        // toast.error('Format de catégories inattendu');
       }
     } catch (err) {
       console.error('Failed to load categories', err);
@@ -89,34 +82,24 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
     if (loading) return;
     setError('');
 
-    // Quick validations
     if (!formData.nom.trim()) {
       const msg = 'Le nom du produit est requis';
-      setError(msg);
-      toast.error(msg);
-      return;
+      setError(msg); toast.error(msg); return;
     }
     if (!formData.category_id) {
       const msg = 'Catégorie requise';
-      setError(msg);
-      toast.error(msg);
-      return;
+      setError(msg); toast.error(msg); return;
     }
-    if (!formData.image_principale && !product) { // Image required only on creation
+    if (!formData.image_principale && !product) {
       const msg = 'Image principale requise';
-      setError(msg);
-      toast.error(msg);
-      return;
+      setError(msg); toast.error(msg); return;
     }
     if (formData.prix <= 0) {
       const msg = 'Prix invalide';
-      setError(msg);
-      toast.error(msg);
-      return;
+      setError(msg); toast.error(msg); return;
     }
 
     setLoading(true);
-
     try {
       const productData = {
         ...formData,
@@ -124,7 +107,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
         prix: Number(formData.prix),
         prix_promotion: formData.prix_promotion ? Number(formData.prix_promotion) : null,
         stock: Number(formData.stock),
-        galerie_images: images.length > 0 ? images : [], // Backend expects list of base64 strings
+        galerie_images: images.length > 0 ? images : [],
       };
 
       if (product) {
@@ -132,9 +115,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
       } else {
         await productAPI.create({ ...productData, sku: `PROD-${Date.now()}` });
       }
-
       setShowSuccessModal(true);
-      // onSuccess(); // Deferred to modal confirm
     } catch (error: any) {
       console.error('Creation error:', error);
       const errorMsg = error.response?.data?.detail
@@ -150,7 +131,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { setError('L\'image doit être < 5MB'); return; }
+    if (file.size > 5 * 1024 * 1024) { setError("L'image doit être < 5MB"); return; }
     if (!file.type.startsWith('image/')) { setError('Fichier invalide'); return; }
 
     setImageUploading(true);
@@ -167,195 +148,478 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
     e.target.value = '';
   };
 
+  const styleOptions = [
+    { value: 'CLASSIC', label: '👔 Classic' },
+    { value: 'MODERN', label: '✨ Modern' },
+    { value: 'SPORT', label: '🏃 Sport' },
+    { value: 'CASUAL', label: '👕 Casual' },
+    { value: 'FORMAL', label: '🎩 Formal' },
+  ];
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="relative">
+      {/* ============================================ */}
+      {/* STICKY SUBMIT BUTTON - Always visible on top */}
+      {/* ============================================ */}
+      <div className="sticky top-0 z-50 -mx-4 sm:-mx-6 px-4 sm:px-6 py-4" style={{ background: 'linear-gradient(to bottom, rgba(10, 10, 30, 0.98) 60%, rgba(10, 10, 30, 0))' }}>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Title */}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 truncate">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #d4af37, #b8860b)' }}>
+                {product ? <Sparkles size={16} className="text-black" /> : <Plus size={16} className="text-black" />}
+              </div>
+              {product ? 'Modifier le Produit' : 'Nouveau Produit'}
+            </h3>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 flex-shrink-0">
+            <button
+              type="button"
+              onClick={onCancel || onSuccess}
+              className="px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                color: '#aaa',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#aaa'; }}
+            >
+              Annuler
+            </button>
+            <button
+              id="submit-product-btn"
+              type="submit"
+              disabled={loading}
+              className="px-6 sm:px-8 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 min-w-[180px]"
+              style={{
+                background: loading ? '#666' : 'linear-gradient(135deg, #d4af37 0%, #f5d76e 40%, #d4af37 70%, #b8860b 100%)',
+                color: '#000',
+                boxShadow: loading ? 'none' : '0 0 25px rgba(212, 175, 55, 0.5), 0 4px 15px rgba(0,0,0,0.3)',
+                transform: 'scale(1)',
+                letterSpacing: '0.5px',
+              }}
+              onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 0 35px rgba(212, 175, 55, 0.7), 0 6px 20px rgba(0,0,0,0.4)'; } }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 25px rgba(212, 175, 55, 0.5), 0 4px 15px rgba(0,0,0,0.3)'; }}
+            >
+              {loading ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                <>
+                  <Plus size={20} strokeWidth={3} />
+                  {product ? 'SAUVEGARDER' : 'AJOUTER LE PRODUIT'}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ============ ERROR BANNER ============ */}
       {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/50 text-red-400 flex justify-between items-center">
-          <span className="flex items-center gap-2"><X className="w-4 h-4" /> {error}</span>
-          <button type="button" onClick={() => setError('')} className="hover:text-white"><X size={16} /></button>
+        <div
+          className="mb-6 p-4 rounded-xl flex items-start gap-3 animate-fade-in"
+          style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.4)' }}
+        >
+          <X className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <span className="text-red-300 text-sm flex-1">{error}</span>
+          <button type="button" onClick={() => setError('')} className="text-red-400 hover:text-white transition-colors flex-shrink-0">
+            <X size={16} />
+          </button>
         </div>
       )}
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* ============================================ */}
+      {/* FORM CONTENT */}
+      {/* ============================================ */}
+      <div className="space-y-6">
 
-        {/* Left Column: Details */}
-        <div className="space-y-6">
-          <h4 className="text-blue-400 font-medium uppercase tracking-wider text-xs border-b border-[#2d2f5e] pb-2 mb-4">Informations Générales</h4>
+        {/* ======= SECTION 1: Informations de base ======= */}
+        <div className="rounded-2xl p-5 sm:p-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'rgba(59, 130, 246, 0.2)' }}>
+              <Type size={14} className="text-blue-400" />
+            </div>
+            <h4 className="text-blue-400 font-semibold text-sm uppercase tracking-wider">Informations Générales</h4>
+          </div>
 
           <div className="space-y-4">
+            {/* Product Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">Nom du Produit</label>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                Nom du Produit <span className="text-red-400">*</span>
+              </label>
               <div className="relative">
                 <input
                   type="text"
                   value={formData.nom}
                   onChange={e => setFormData({ ...formData, nom: e.target.value })}
-                  className="w-full bg-[#141b2d] border border-[#2d2f5e] rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all outline-none"
                   placeholder="Ex: Robe de Soirée Élégante"
+                  className="w-full rounded-xl px-4 py-3.5 text-white text-base placeholder-gray-600 outline-none transition-all duration-200"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1.5px solid rgba(255,255,255,0.1)',
+                  }}
+                  onFocus={e => { e.target.style.borderColor = '#d4af37'; e.target.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
                 />
-                <Sparkles className="absolute right-4 top-3.5 text-gray-600 w-5 h-5" />
+                <Sparkles className="absolute right-4 top-4 text-gray-600 w-5 h-5" />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* Category + Style */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1 flex justify-between">
-                  Catégorie
-                  {error.includes('catégories') && (
-                    <button type="button" onClick={fetchCategories} className="text-xs text-blue-400 hover:text-blue-300 underline">Réessayer</button>
-                  )}
+                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                  Catégorie <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <select
                     value={formData.category_id}
                     onChange={e => setFormData({ ...formData, category_id: e.target.value })}
-                    className="w-full bg-[#141b2d] border border-[#2d2f5e] rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none appearance-none disabled:opacity-50"
                     disabled={categoriesLoading}
+                    className="w-full rounded-xl px-4 py-3.5 text-white text-base outline-none transition-all duration-200 appearance-none disabled:opacity-50"
+                    style={{
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1.5px solid rgba(255,255,255,0.1)',
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
-                    <option value="">Sélectionner une catégorie</option>
+                    <option value="">Sélectionner...</option>
                     {categories.map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
                   </select>
-                  {categoriesLoading && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-                    </div>
-                  )}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    {categoriesLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-gray-500" />
+                    )}
+                  </div>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Style</label>
-                <select
-                  value={formData.style}
-                  onChange={e => setFormData({ ...formData, style: e.target.value })}
-                  className="w-full bg-[#141b2d] border border-[#2d2f5e] rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none"
-                >
-                  {['CLASSIC', 'MODERN', 'SPORT', 'CASUAL', 'FORMAL'].map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <label className="block text-sm font-medium text-gray-400 mb-1.5">Style</label>
+                <div className="relative">
+                  <select
+                    value={formData.style}
+                    onChange={e => setFormData({ ...formData, style: e.target.value })}
+                    className="w-full rounded-xl px-4 py-3.5 text-white text-base outline-none transition-all duration-200 appearance-none"
+                    style={{
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1.5px solid rgba(255,255,255,0.1)',
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  >
+                    {styleOptions.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Prix (FCFA)</label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={formData.prix}
-                    onChange={e => setFormData({ ...formData, prix: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-[#141b2d] border border-[#2d2f5e] rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none"
-                  />
-                  <DollarSign className="absolute right-4 top-3.5 text-gray-600 w-4 h-4" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Stock</label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={formData.stock}
-                    onChange={e => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-                    className="w-full bg-[#141b2d] border border-[#2d2f5e] rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none"
-                  />
-                  <Box className="absolute right-4 top-3.5 text-gray-600 w-4 h-4" />
-                </div>
-              </div>
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <FileText size={14} className="inline mr-1" />
+                Description
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={e => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                placeholder="Décrivez votre produit..."
+                className="w-full rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 outline-none transition-all duration-200 resize-none"
+                style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  border: '1.5px solid rgba(255,255,255,0.1)',
+                }}
+                onFocus={e => { e.target.style.borderColor = '#d4af37'; e.target.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
+              />
             </div>
-          </div>
-
-          <div className="pt-4">
-            <label className="block text-sm font-medium text-gray-400 mb-1">Description</label>
-            <textarea
-              value={formData.description}
-              onChange={e => setFormData({ ...formData, description: e.target.value })}
-              rows={4}
-              className="w-full bg-[#141b2d] border border-[#2d2f5e] rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none resize-none"
-            />
           </div>
         </div>
 
-        {/* Right Column: Visuals */}
-        <div className="space-y-6">
-          <h4 className="text-blue-400 font-medium uppercase tracking-wider text-xs border-b border-[#2d2f5e] pb-2 mb-4">Visuels & Finitions</h4>
+        {/* ======= SECTION 2: Prix & Stock ======= */}
+        <div className="rounded-2xl p-5 sm:p-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'rgba(16, 185, 129, 0.2)' }}>
+              <Tag size={14} className="text-emerald-400" />
+            </div>
+            <h4 className="text-emerald-400 font-semibold text-sm uppercase tracking-wider">Prix & Stock</h4>
+          </div>
 
-          <div className="space-y-4">
-            {/* Main Image Upload */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Prix */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Image Principale</label>
-              <div className="w-full aspect-video rounded-2xl border-2 border-dashed border-[#2d2f5e] hover:border-blue-500/50 bg-[#141b2d] flex flex-col items-center justify-center transition-all relative overflow-hidden group">
-                {formData.image_principale ? (
-                  <>
-                    <img src={formData.image_principale} alt="Preview" className="w-full h-full object-cover" />
-                    <button type="button" onClick={() => setFormData({ ...formData, image_principale: '' })} className="absolute top-2 right-2 bg-red-500 p-1.5 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                      <X size={16} />
-                    </button>
-                  </>
-                ) : (
-                  <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center">
-                    {imageUploading ? <Loader2 className="animate-spin text-blue-400" /> : <ImageIcon className="text-gray-600 mb-2 w-8 h-8" />}
-                    <span className="text-dark-600 dark:text-primary-300 text-sm">Cliquez pour uploader</span>
-                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                  </label>
-                )}
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                Prix (FCFA) <span className="text-red-400">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={formData.prix}
+                  onChange={e => setFormData({ ...formData, prix: parseFloat(e.target.value) || 0 })}
+                  className="w-full rounded-xl px-4 py-3.5 text-white text-base outline-none transition-all duration-200"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1.5px solid rgba(255,255,255,0.1)',
+                  }}
+                  onFocus={e => { e.target.style.borderColor = '#10b981'; e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.15)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
+                />
+                <span className="absolute right-4 top-3.5 text-gray-500 text-sm font-medium">FCFA</span>
               </div>
             </div>
 
-            {/* Gallery */}
+            {/* Prix Promo */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Galerie (Max 5)</label>
-              <div className="grid grid-cols-4 gap-2">
-                {images.map((img, idx) => (
-                  <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-[#2d2f5e] group">
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                    <button type="button" onClick={() => setImages(images.filter((_, i) => i !== idx))} className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100">
-                      <X size={12} />
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">Prix Promo</label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={formData.prix_promotion}
+                  onChange={e => setFormData({ ...formData, prix_promotion: e.target.value })}
+                  placeholder="Optionnel"
+                  className="w-full rounded-xl px-4 py-3.5 text-white text-base placeholder-gray-600 outline-none transition-all duration-200"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1.5px solid rgba(255,255,255,0.1)',
+                  }}
+                  onFocus={e => { e.target.style.borderColor = '#10b981'; e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.15)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
+                />
+              </div>
+            </div>
+
+            {/* Stock */}
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                Stock <span className="text-red-400">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={formData.stock}
+                  onChange={e => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                  className="w-full rounded-xl px-4 py-3.5 text-white text-base outline-none transition-all duration-200"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1.5px solid rgba(255,255,255,0.1)',
+                  }}
+                  onFocus={e => { e.target.style.borderColor = '#10b981'; e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.15)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
+                />
+                <Box className="absolute right-4 top-4 text-gray-600 w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======= SECTION 3: Images ======= */}
+        <div className="rounded-2xl p-5 sm:p-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'rgba(168, 85, 247, 0.2)' }}>
+              <ImageIcon size={14} className="text-purple-400" />
+            </div>
+            <h4 className="text-purple-400 font-semibold text-sm uppercase tracking-wider">Photos du Produit</h4>
+          </div>
+
+          {/* Main Image */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Image Principale <span className="text-red-400">*</span>
+            </label>
+            <div
+              className="w-full rounded-2xl overflow-hidden transition-all duration-300 relative group"
+              style={{
+                aspectRatio: '16/9',
+                background: 'rgba(0,0,0,0.3)',
+                border: formData.image_principale ? '2px solid rgba(168, 85, 247, 0.3)' : '2px dashed rgba(255,255,255,0.15)',
+              }}
+            >
+              {formData.image_principale ? (
+                <>
+                  <img src={formData.image_principale} alt="Preview" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, image_principale: '' })}
+                      className="px-4 py-2 rounded-lg text-white text-sm font-medium flex items-center gap-2"
+                      style={{ background: 'rgba(239, 68, 68, 0.8)' }}
+                    >
+                      <X size={16} /> Supprimer
                     </button>
                   </div>
-                ))}
-                {images.length < 5 && (
-                  <label className="cursor-pointer aspect-square rounded-lg border border-dashed border-[#2d2f5e] hover:border-blue-500 bg-[#141b2d] flex items-center justify-center text-gray-600 hover:text-blue-500 transition-colors">
-                    <Plus />
-                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                  </label>
-                )}
-              </div>
+                </>
+              ) : (
+                <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center gap-2 hover:bg-white/5 transition-colors">
+                  {imageUploading ? (
+                    <Loader2 className="animate-spin text-purple-400" size={32} />
+                  ) : (
+                    <>
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'rgba(168, 85, 247, 0.15)' }}>
+                        <Upload size={24} className="text-purple-400" />
+                      </div>
+                      <span className="text-gray-400 text-sm font-medium">Cliquez pour uploader l'image</span>
+                      <span className="text-gray-600 text-xs">PNG, JPG • Max 5MB</span>
+                    </>
+                  )}
+                  <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                </label>
+              )}
             </div>
+          </div>
 
-            {/* Toggles */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#2d2f5e]">
-              <label className="flex items-center gap-3 cursor-pointer group">
-                <div className={`w-12 h-6 rounded-full p-1 transition-colors ${formData.is_featured ? 'bg-blue-500' : 'bg-[#2d2f5e]'}`}>
-                  <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${formData.is_featured ? 'translate-x-6' : ''}`} />
+          {/* Gallery */}
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Galerie (Max 5 images)</label>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+              {images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="relative rounded-xl overflow-hidden group"
+                  style={{ aspectRatio: '1', border: '1px solid rgba(255,255,255,0.1)' }}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setImages(images.filter((_, i) => i !== idx))}
+                    className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: 'rgba(239, 68, 68, 0.9)' }}
+                  >
+                    <X size={12} className="text-white" />
+                  </button>
                 </div>
-                <span className="text-sm text-gray-300 group-hover:text-white">Afficher sur l'accueil</span>
-                <input type="checkbox" className="hidden" checked={formData.is_featured} onChange={e => setFormData({ ...formData, is_featured: e.target.checked })} />
-              </label>
-
-              <label className="flex items-center gap-3 cursor-pointer group">
-                <div className={`w-12 h-6 rounded-full p-1 transition-colors ${formData.is_active ? 'bg-green-500' : 'bg-[#2d2f5e]'}`}>
-                  <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${formData.is_active ? 'translate-x-6' : ''}`} />
-                </div>
-                <span className="text-sm text-gray-300 group-hover:text-white">Produit Actif</span>
-                <input type="checkbox" className="hidden" checked={formData.is_active} onChange={e => setFormData({ ...formData, is_active: e.target.checked })} />
-              </label>
+              ))}
+              {images.length < 5 && (
+                <label
+                  className="cursor-pointer rounded-xl flex flex-col items-center justify-center gap-1 transition-all duration-200 hover:bg-white/5"
+                  style={{
+                    aspectRatio: '1',
+                    border: '2px dashed rgba(255,255,255,0.12)',
+                  }}
+                >
+                  <Plus size={20} className="text-gray-500" />
+                  <span className="text-gray-600 text-[10px]">Ajouter</span>
+                  <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                </label>
+              )}
             </div>
           </div>
         </div>
+
+        {/* ======= SECTION 4: Options ======= */}
+        <div className="rounded-2xl p-5 sm:p-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'rgba(251, 191, 36, 0.2)' }}>
+              <Layers size={14} className="text-amber-400" />
+            </div>
+            <h4 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Options & Visibilité</h4>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Featured Toggle */}
+            <label
+              className="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200 group"
+              style={{
+                background: formData.is_featured ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0,0,0,0.2)',
+                border: formData.is_featured ? '1px solid rgba(212, 175, 55, 0.3)' : '1px solid rgba(255,255,255,0.06)',
+              }}
+            >
+              <div
+                className="w-14 h-8 rounded-full p-1 transition-all duration-300 flex-shrink-0"
+                style={{
+                  background: formData.is_featured
+                    ? 'linear-gradient(135deg, #d4af37, #b8860b)'
+                    : 'rgba(255,255,255,0.1)',
+                }}
+              >
+                <div
+                  className="w-6 h-6 bg-white rounded-full shadow-lg transition-transform duration-300"
+                  style={{ transform: formData.is_featured ? 'translateX(24px)' : 'translateX(0)' }}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <Star size={14} className={formData.is_featured ? 'text-amber-400' : 'text-gray-500'} />
+                  <span className={`text-sm font-medium ${formData.is_featured ? 'text-white' : 'text-gray-400'}`}>
+                    Produit Vedette
+                  </span>
+                </div>
+                <span className="text-xs text-gray-500">Affiché sur la page d'accueil</span>
+              </div>
+              <input type="checkbox" className="hidden" checked={formData.is_featured} onChange={e => setFormData({ ...formData, is_featured: e.target.checked })} />
+            </label>
+
+            {/* Active Toggle */}
+            <label
+              className="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200 group"
+              style={{
+                background: formData.is_active ? 'rgba(16, 185, 129, 0.08)' : 'rgba(0,0,0,0.2)',
+                border: formData.is_active ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(255,255,255,0.06)',
+              }}
+            >
+              <div
+                className="w-14 h-8 rounded-full p-1 transition-all duration-300 flex-shrink-0"
+                style={{
+                  background: formData.is_active
+                    ? 'linear-gradient(135deg, #10b981, #059669)'
+                    : 'rgba(255,255,255,0.1)',
+                }}
+              >
+                <div
+                  className="w-6 h-6 bg-white rounded-full shadow-lg transition-transform duration-300"
+                  style={{ transform: formData.is_active ? 'translateX(24px)' : 'translateX(0)' }}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <Power size={14} className={formData.is_active ? 'text-emerald-400' : 'text-gray-500'} />
+                  <span className={`text-sm font-medium ${formData.is_active ? 'text-white' : 'text-gray-400'}`}>
+                    Produit Actif
+                  </span>
+                </div>
+                <span className="text-xs text-gray-500">Visible dans le catalogue</span>
+              </div>
+              <input type="checkbox" className="hidden" checked={formData.is_active} onChange={e => setFormData({ ...formData, is_active: e.target.checked })} />
+            </label>
+          </div>
+        </div>
+
+        {/* ======= BOTTOM SUBMIT BUTTON (duplicate for mobile users) ======= */}
+        <div className="pt-4 pb-2">
+          <button
+            id="submit-product-btn-bottom"
+            type="submit"
+            disabled={loading}
+            className="w-full py-4 rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-3"
+            style={{
+              background: loading ? '#444' : 'linear-gradient(135deg, #d4af37 0%, #f5d76e 30%, #d4af37 60%, #b8860b 100%)',
+              color: '#000',
+              boxShadow: loading ? 'none' : '0 0 30px rgba(212, 175, 55, 0.4), 0 6px 20px rgba(0,0,0,0.3)',
+              letterSpacing: '1px',
+            }}
+            onMouseEnter={e => { if (!loading) { e.currentTarget.style.boxShadow = '0 0 45px rgba(212, 175, 55, 0.6), 0 8px 25px rgba(0,0,0,0.4)'; } }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 30px rgba(212, 175, 55, 0.4), 0 6px 20px rgba(0,0,0,0.3)'; }}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={24} />
+            ) : (
+              <>
+                <Plus size={22} strokeWidth={3} />
+                {product ? 'SAUVEGARDER LES MODIFICATIONS' : '✨ AJOUTER LE PRODUIT ✨'}
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Footer Actions */}
-      <div className="flex justify-end gap-3 pt-6 border-t border-[#2d2f5e]">
-        <button type="button" onClick={onCancel || onSuccess} className="px-6 py-2.5 rounded-xl border border-[#2d2f5e] text-gray-300 hover:bg-[#2d2f5e] transition-colors font-medium">Annuler</button>
-        <button
-          type="submit"
-          disabled={loading}
-          className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all flex items-center gap-2"
-        >
-          {loading ? <Loader2 className="animate-spin" /> : <Plus size={20} />}
-          {product ? 'Sauvegarder' : 'Créer le Produit'}
-        </button>
-      </div>
-
+      {/* Success Modal */}
       <ConfirmationModal
         isOpen={showSuccessModal}
         onClose={() => {

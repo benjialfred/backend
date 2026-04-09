@@ -375,7 +375,7 @@ const Cart = () => {
                           <div className="flex items-center gap-4">
                             <div className="flex items-center bg-gray-100 dark:bg-white/5 rounded-full p-1 relative">
                               <button
-                                onClick={() => updateQuantity(item.id, -1)}
+                                onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                                 disabled={item.quantity <= 1}
                                 className="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all"
                               >
@@ -385,15 +385,20 @@ const Cart = () => {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => updateQuantity(item.id, 1)}
+                                onClick={() => updateQuantity(item.id, Math.min(item.stock, item.quantity + 1))}
                                 disabled={item.quantity >= item.stock}
                                 className="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all"
                               >
                                 <Plus className="w-4 h-4" />
                               </button>
                             </div>
-                            <div className="text-gray-900 dark:text-white font-bold hidden sm:block">
-                              = {(item.prix * item.quantity).toLocaleString()} FCFA
+                            <div className="flex flex-col">
+                              <div className="text-gray-900 dark:text-white font-bold">
+                                = {((item.prix_promotion || item.prix) * item.quantity).toLocaleString()} FCFA
+                              </div>
+                              {item.quantity >= item.stock && (
+                                <span className="text-[10px] text-amber-500 font-medium">Stock max atteint</span>
+                              )}
                             </div>
                           </div>
 

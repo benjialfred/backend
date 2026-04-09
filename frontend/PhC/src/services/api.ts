@@ -26,8 +26,9 @@ export interface ContactMessageData {
 
 // Configuration de base de l'API
 // Utilisez l'URL locale pour le développement, et l'URL Render en production
-// const API_BASE_URL = 'https://tonbackend.onrender.com/api';
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const PROD_API_URL = import.meta.env.VITE_API_URL || 'https://backend-1-7oti.onrender.com/api';
+const API_BASE_URL = isProduction ? PROD_API_URL : 'http://127.0.0.1:8000/api';
 export const NELSIUS_PUBLIC_KEY = 'pk_live_1JTwmLuoxBtbAHvsMrpO6g49scnw9G4d';
 
 // Interface étendue pour inclure la propriété _retry
@@ -244,8 +245,9 @@ export const authAPI = {
       const errorData = error.response?.data || {};
       let errorMessage = errorData.detail || errorData.error || errorData.non_field_errors?.[0];
 
-      // Messages d'erreur spécifiques
-      if (error.response?.status === 403) {
+      if (!error.response || error.message === 'Network Error') {
+          errorMessage = "Impossible de joindre le serveur. Vérifiez votre connexion internet.";
+      } else if (error.response?.status === 403) {
         errorMessage = errorMessage || 'Compte désactivé ou bloqué';
       } else if (error.response?.status === 401) {
         errorMessage = errorMessage || 'Email ou mot de passe incorrect';

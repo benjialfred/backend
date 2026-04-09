@@ -87,7 +87,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     };
 
     const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-    const cartTotal = cartItems.reduce((acc, item) => acc + (item.prix * item.quantity), 0);
+    const cartTotal = cartItems.reduce((acc, item) => acc + ((item.prix_promotion || item.prix) * item.quantity), 0);
 
     // Bonus Modal Logic
     const [showBonusModal, setShowBonusModal] = useState(false);

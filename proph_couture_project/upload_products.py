@@ -13,8 +13,8 @@ import time
 # CONFIGURATION
 # ==========================================
 API_BASE = "https://backend-1-7oti.onrender.com/api"
-ADMIN_EMAIL = "benjaminadzessa@gmail.com"
-ADMIN_PASSWORD = "Admin@PhC2026!"
+ADMIN_EMAIL = "admin@phc.com"
+ADMIN_PASSWORD = "PhC_Admin_Secure_2024!"
 
 IMAGES_DIR = r"c:\PhC\frontend\PhC\src\assets\ajout"
 

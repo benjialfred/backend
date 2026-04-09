@@ -34,8 +34,8 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 import requests
 import urllib3
-# import pyotp
-# import qrcode
+import pyotp
+import qrcode
 import io
 import base64
 from django.core.mail import send_mail
@@ -126,6 +126,7 @@ class CheckEmailView(APIView):
     Vérifie si un email existe déjà dans la base de données
     """
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
     
     def get(self, request):
         email = request.query_params.get('email')
@@ -335,6 +336,7 @@ class RegisterView(generics.CreateAPIView):
 # Vue de connexion
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
     
     def post(self, request):
         serializer = LoginSerializer(data=request.data)

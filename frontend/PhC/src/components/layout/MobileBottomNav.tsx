@@ -58,7 +58,7 @@ const MobileBottomNav = () => {
                 </NavLink>
 
                 {/* Account */}
-                <NavLink to={user ? "/dashboard" : "/login"} className={({ isActive }) => `flex flex-col items-center justify-center w-14 h-full rounded-xl transition-all ${isActive ? 'text-primary-500' : 'text-gray-500 dark:text-gray-400'}`}>
+                <NavLink to={user ? (user.role === 'CLIENT' ? "/client/dashboard" : "/dashboard") : "/login"} className={({ isActive }) => `flex flex-col items-center justify-center w-14 h-full rounded-xl transition-all ${isActive ? 'text-primary-500' : 'text-gray-500 dark:text-gray-400'}`}>
                     {user ? <Settings className="w-6 h-6" /> : <User className="w-6 h-6" />}
                     <span className="text-[9px] font-medium mt-1">{user ? 'Espace' : 'Compte'}</span>
                 </NavLink>
