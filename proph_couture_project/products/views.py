@@ -64,34 +64,46 @@ class ProductViewSet(viewsets.ModelViewSet):
         product = serializer.save()
         if self.request.user and self.request.user.is_authenticated:
             from communications.models import Notification
-            Notification.objects.create(
-                user=self.request.user,
-                title="Produit ajouté",
-                message=f"Vous avez ajouté le produit : {product.nom}",
-                type='SYSTEME'
-            )
+            try:
+                Notification.objects.create(
+                    user=self.request.user,
+                    title="Produit ajouté",
+                    message=f"Vous avez ajouté le produit : {product.nom}",
+                    type='INFO'
+                )
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Error creating notification: {e}")
 
     def perform_update(self, serializer):
         product = serializer.save()
         if self.request.user and self.request.user.is_authenticated:
             from communications.models import Notification
-            Notification.objects.create(
-                user=self.request.user,
-                title="Produit modifié",
-                message=f"Le produit {product.nom} a été mis à jour avec succès.",
-                type='SYSTEME'
-            )
+            try:
+                Notification.objects.create(
+                    user=self.request.user,
+                    title="Produit modifié",
+                    message=f"Le produit {product.nom} a été mis à jour avec succès.",
+                    type='INFO'
+                )
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Error creating notification: {e}")
 
     def perform_destroy(self, instance):
         nom = instance.nom
         if self.request.user and self.request.user.is_authenticated:
             from communications.models import Notification
-            Notification.objects.create(
-                user=self.request.user,
-                title="Produit supprimé",
-                message=f"Le produit {nom} a été supprimé.",
-                type='SYSTEME'
-            )
+            try:
+                Notification.objects.create(
+                    user=self.request.user,
+                    title="Produit supprimé",
+                    message=f"Le produit {nom} a été supprimé.",
+                    type='INFO'
+                )
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Error creating notification: {e}")
         instance.delete()
 
     @action(detail=True, methods=['patch'])
