@@ -81,16 +81,26 @@ export default function Checkout() {
                 clearCart();
                 navigate(`/payment/success?order=${orderResponse.order_number}`);
             } else {
-                const paymentResponse = await orderAPI.initiatePayment(orderResponse.order_number, {
-                    payment_method: 'nelsius',
-                    phone: info.phone
-                });
-                
-                if (paymentResponse.success && paymentResponse.payment_url) {
+                try {
+                    const paymentResponse = await orderAPI.initiatePayment(orderResponse.order_number, {
+                        payment_method: 'nelsius',
+                        phone: info.phone
+                    });
+                    
+                    if (paymentResponse.success && paymentResponse.payment_url) {
+                        clearCart();
+                        window.location.href = paymentResponse.payment_url;
+                    } else {
+                        // Commande créée mais paiement à confirmer
+                        clearCart();
+                        navigate(`/payment/success?order=${orderResponse.order_number}&payment=pending`);
+                    }
+                } catch (paymentError: any) {
+                    // La commande est créée même si le paiement échoue
+                    // On redirige vers succès avec indication de paiement en attente
+                    console.error("Erreur paiement (commande créée):", paymentError);
                     clearCart();
-                    window.location.href = paymentResponse.payment_url;
-                } else {
-                    throw new Error(paymentResponse.error || "Erreur lors de l'initialisation du paiement");
+                    navigate(`/payment/success?order=${orderResponse.order_number}&payment=pending`);
                 }
             }
         } catch (error: any) {
