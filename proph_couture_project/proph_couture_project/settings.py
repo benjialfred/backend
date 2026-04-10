@@ -221,10 +221,10 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # Configuration Nelsius pour gerer les paiements
 # J'utilise les variables d'environnement (os.getenv) pour ne pas exposer les clés
 # secrètes directement dans le code source (Bonne pratique DevOps).
-NELSIUS_API_KEY = os.getenv('NELSIUS_API_KEY', 'pk_x9vweLequ9dCuf3Oq5IW3cJTN0JBFsqT')
+NELSIUS_API_KEY = os.getenv('NELSIUS_API_KEY', '')
 NELSIUS_SECRET_KEY = os.getenv('NELSIUS_SECRET_KEY', '')
-NELSIUS_BASE_URL = 'https://api.nelsius.com/api/v1'  # URL API Nelsius
-NELSIUS_WEBHOOK_SECRET = os.getenv('NELSIUS_WEBHOOK_SECRET', 'whsec_jg6Bz5MZLgyQoVbdpDsp8pVKg4ZsyfLv')
+NELSIUS_BASE_URL = 'https://api.nelsius.com/api/v1'
+NELSIUS_WEBHOOK_SECRET = os.getenv('NELSIUS_WEBHOOK_SECRET', '')
 
 # Configuration SMS
 SMS_API_URL = os.getenv('SMS_API_URL', 'https://api.example-sms.com/send')

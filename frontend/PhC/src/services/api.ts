@@ -29,7 +29,7 @@ export interface ContactMessageData {
 const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 const PROD_API_URL = import.meta.env.VITE_API_URL || 'https://backend-1-7oti.onrender.com/api';
 const API_BASE_URL = isProduction ? PROD_API_URL : 'http://127.0.0.1:8000/api';
-export const NELSIUS_PUBLIC_KEY = 'pk_live_X1LuS9T6uy0vMWeXCDExjOmKrju3yuXF';
+export const NELSIUS_PUBLIC_KEY = import.meta.env.VITE_NELSIUS_PUBLIC_KEY || '';
 
 // Interface étendue pour inclure la propriété _retry
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
