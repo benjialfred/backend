@@ -118,9 +118,29 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
       setShowSuccessModal(true);
     } catch (error: any) {
       console.error('Creation error:', error);
-      const errorMsg = error.response?.data?.detail
-        || (typeof error.response?.data === 'object' ? JSON.stringify(error.response?.data) : null)
-        || 'Erreur lors de la sauvegarde';
+      console.error('Creation error response data:', JSON.stringify(error.response?.data));
+      
+      let errorMsg = 'Erreur lors de la sauvegarde';
+      const errData = error.response?.data;
+
+      if (!error.response || error.message === 'Network Error') {
+        errorMsg = "Impossible de joindre le serveur. Vérifiez votre connexion.";
+      } else if (errData) {
+        if (typeof errData === 'string') {
+          errorMsg = errData;
+        } else if (errData.detail) {
+          errorMsg = errData.detail;
+        } else if (errData.non_field_errors) {
+          errorMsg = Array.isArray(errData.non_field_errors) ? errData.non_field_errors.join(', ') : errData.non_field_errors;
+        } else {
+          // Extract all field errors
+          const fieldErrors = Object.entries(errData)
+            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+            .join(' | ');
+          errorMsg = fieldErrors || JSON.stringify(errData);
+        }
+      }
+
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
