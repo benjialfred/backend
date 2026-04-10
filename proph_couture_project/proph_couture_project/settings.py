@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&947mzy1nsvbxfco#r*klis)g+cu!w^8as*xb&hgm(07dyfelg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com', 'backend-1-7oti.onrender.com', 'prophetiecouture.vercel.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '*', 'prophetiecouture.vercel.app']
 
 # Application definition
 
