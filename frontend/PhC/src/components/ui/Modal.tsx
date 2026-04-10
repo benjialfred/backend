@@ -43,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({
       {isOpen && (
         <div className="fixed inset-0 z-[100] overflow-y-auto">
           {/* Flex container for centering */}
-          <div className="flex min-h-full items-center justify-center p-4">
+          <div className="flex min-h-[100dvh] items-start justify-center p-4 pt-20 pb-12">
 
             {/* Overlay Backdrop */}
             <motion.div

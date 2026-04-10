@@ -32,7 +32,6 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const [error, setError] = useState('');
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -115,7 +114,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
       } else {
         await productAPI.create({ ...productData, sku: `PROD-${Date.now()}` });
       }
-      setShowSuccessModal(true);
+      onSuccess();
     } catch (error: any) {
       console.error('Creation error:', error);
       console.error('Creation error response data:', JSON.stringify(error.response?.data));
@@ -637,24 +636,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ product, onSuccess, onC
             )}
           </button>
         </div>
+        </div>
       </div>
-
-      {/* Success Modal */}
-      <ConfirmationModal
-        isOpen={showSuccessModal}
-        onClose={() => {
-          setShowSuccessModal(false);
-          onSuccess();
-        }}
-        onConfirm={() => {
-          setShowSuccessModal(false);
-        }}
-        title="Succès"
-        message={product ? "Le produit a été mis à jour avec succès." : "Confirmation d'ajout : Le produit a été créé avec succès."}
-        type="success"
-        confirmLabel="Parfait"
-        cancelLabel="Fermer"
-      />
     </form>
   );
 };
